@@ -1,3 +1,19 @@
+# build libjq
+FROM ubuntu:18.04 AS libjq
+ENV DEBIAN_FRONTEND=noninteractive \
+    DEBCONF_NONINTERACTIVE_SEEN=true \
+    LC_ALL=C.UTF-8 \
+    LANG=C.UTF-8
+
+RUN apt-get update && \
+    apt-get install -y git ca-certificates && \
+    git clone https://github.com/flant/libjq-go /libjq-go && \
+    cd /libjq-go && \
+    git submodule update --init && \
+    /libjq-go/scripts/install-libjq-dependencies-ubuntu.sh && \
+    /libjq-go/scripts/build-libjq-static.sh /libjq-go /out
+
+
 # build shell-operator binary
 FROM golang:1.12 AS shell-operator
 ARG appVersion=latest
@@ -5,12 +21,13 @@ ARG appVersion=latest
 # Cache-friendly download of go dependencies.
 ADD "https://raw.githubusercontent.com/flant/shell-operator/master/go.mod" "https://raw.githubusercontent.com/flant/shell-operator/master/go.sum" /src/shell-operator/
 WORKDIR /src/shell-operator
-# RUN go mod download
+RUN go mod download
 
-# COPY --from=libjq /out/build /build
+COPY --from=libjq /out/build /build
 ADD "https://github.com/flant/shell-operator/archive/master.tar.gz" /tmp
-RUN ls /tmp \
-      mv /tmp/shell-operator-master/* /src/shell-operator/
+RUN git clone https://github.com/flant/shell-operator.git /tmp \
+      ls /tmp \
+      mv /tmp/shell-operator/* /src/shell-operator/
 
 
 RUN CGO_ENABLED=1 \
