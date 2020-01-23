@@ -5,7 +5,7 @@ ARG appVersion=latest
 # Cache-friendly download of go dependencies.
 ADD "https://raw.githubusercontent.com/flant/shell-operator/master/go.mod" "https://raw.githubusercontent.com/flant/shell-operator/master/go.sum" /src/shell-operator/
 WORKDIR /src/shell-operator
-RUN go mod download
+# RUN go mod download
 
 # COPY --from=libjq /out/build /build
 ADD "https://github.com/flant/shell-operator/archive/master.tar.gz" /tmp
