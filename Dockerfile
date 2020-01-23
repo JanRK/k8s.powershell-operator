@@ -8,7 +8,7 @@ ADD "https://raw.githubusercontent.com/flant/shell-operator/master/go.mod" "http
 WORKDIR /src/shell-operator
 # RUN go mod download
 
-COPY --from=libjq /out/build /build
+# COPY --from=libjq /out/build /build
 ADD "https://github.com/flant/shell-operator/archive/master.tar.gz" /tmp
 RUN git clone https://github.com/flant/shell-operator.git /tmp; \
       ls /tmp; \
