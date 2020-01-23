@@ -10,7 +10,7 @@ WORKDIR /src/shell-operator
 # COPY --from=libjq /out/build /build
 RUN mkdir /tmp/so; \
       git clone https://github.com/flant/shell-operator.git /tmp/so; \
-      ls /tmp; \
+      ls /tmp/so; \
       mv /tmp/so/shell-operator/* /src/shell-operator/
 
 
