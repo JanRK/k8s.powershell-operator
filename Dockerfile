@@ -19,12 +19,12 @@ FROM golang:1.12 AS shell-operator
 ARG appVersion=latest
 
 # Cache-friendly download of go dependencies.
-ADD go.mod go.sum /src/shell-operator/
+ADD "https://raw.githubusercontent.com/flant/shell-operator/master/go.mod" "https://raw.githubusercontent.com/flant/shell-operator/master/go.sum" /src/shell-operator/
 WORKDIR /src/shell-operator
 RUN go mod download
 
 COPY --from=libjq /out/build /build
-ADD . /src/shell-operator
+RUN git clone https://github.com/flant/shell-operator.git /src/shell-operator
 
 RUN CGO_ENABLED=1 \
     CGO_CFLAGS="-I/build/jq/include" \
