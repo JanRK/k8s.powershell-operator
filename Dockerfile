@@ -36,7 +36,7 @@ RUN CGO_ENABLED=1 \
 
 
 # build final image
-FROM debian:stable-slim
+FROM debian:stretch-slim
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV POWERSHELL_TELEMETRY_OPTOUT 1
