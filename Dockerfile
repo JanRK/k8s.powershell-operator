@@ -1,4 +1,3 @@
-
 # build shell-operator binary
 FROM golang:1.12 AS shell-operator
 ARG appVersion=latest
@@ -6,13 +5,13 @@ ARG appVersion=latest
 # Cache-friendly download of go dependencies.
 ADD "https://raw.githubusercontent.com/flant/shell-operator/master/go.mod" "https://raw.githubusercontent.com/flant/shell-operator/master/go.sum" /src/shell-operator/
 WORKDIR /src/shell-operator
-# RUN go mod download
+RUN go mod download
 
 # COPY --from=libjq /out/build /build
-ADD "https://github.com/flant/shell-operator/archive/master.tar.gz" /tmp
-RUN git clone https://github.com/flant/shell-operator.git /tmp; \
+RUN mkdir /tmp/so; \
+      git clone https://github.com/flant/shell-operator.git /tmp/so; \
       ls /tmp; \
-      mv /tmp/shell-operator/* /src/shell-operator/
+      mv /tmp/so/shell-operator/* /src/shell-operator/
 
 
 RUN CGO_ENABLED=1 \
