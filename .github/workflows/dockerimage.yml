@@ -29,7 +29,7 @@ jobs:
             docker-compose --file docker-compose.test.yml run sut
           else
             echo Testing ${GITHUB_REPOSITORY,,}
-            docker build . --file Dockerfile --cache-from ${GITHUB_REPOSITORY,,}:shell-operator --cache-from ${GITHUB_REPOSITORY,,}:libjq
+            docker build . --file Dockerfile --cache-from ${GITHUB_REPOSITORY,,}:shell-operator --cache-from ${GITHUB_REPOSITORY,,}:libjq --cache-from ${GITHUB_REPOSITORY,,}:latest
           fi
 
 
@@ -47,7 +47,7 @@ jobs:
         run:  |
           docker build . --file Dockerfile --tag ${GITHUB_REPOSITORY,,}:libjq --target libjq --cache-from ${GITHUB_REPOSITORY,,}:libjq
           docker build . --file Dockerfile --tag ${GITHUB_REPOSITORY,,}:shell-operator --target shell-operator --cache-from ${GITHUB_REPOSITORY,,}:shell-operator
-          docker build . --file Dockerfile --tag ${GITHUB_REPOSITORY,,} --cache-from ${GITHUB_REPOSITORY,,}:shell-operator --cache-from ${GITHUB_REPOSITORY,,}:libjq
+          docker build . --file Dockerfile --tag ${GITHUB_REPOSITORY,,} --cache-from ${GITHUB_REPOSITORY,,}:shell-operator --cache-from ${GITHUB_REPOSITORY,,}:libjq --cache-from ${GITHUB_REPOSITORY,,}:latest
 
       - name: Log into registry
         run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
