@@ -1,5 +1,6 @@
 # build libjq
 FROM ubuntu:18.04 AS libjq
+ENV BUILDNAME  libjq
 ENV DEBIAN_FRONTEND=noninteractive \
     DEBCONF_NONINTERACTIVE_SEEN=true \
     LC_ALL=C.UTF-8 \
@@ -16,6 +17,7 @@ RUN apt-get update && \
 
 # build shell-operator binary
 FROM golang:1.12 AS shell-operator
+ENV BUILDNAME shell-oper
 ARG appVersion=latest
 
 # Cache-friendly download of go dependencies.
@@ -37,7 +39,7 @@ RUN CGO_ENABLED=1 \
 
 # build final image
 FROM debian:stretch-slim
-
+ENV BUILDNAME pwsh-oper
 ENV DEBIAN_FRONTEND noninteractive
 ENV POWERSHELL_TELEMETRY_OPTOUT 1
 ENV SHELL_OPERATOR_WORKING_DIR /hooks
@@ -63,6 +65,7 @@ RUN wget --directory-prefix=/usr/share/keyrings https://packages.microsoft.com/k
 COPY --from=shell-operator /src/shell-operator /
 
 ADD hooks /hooks
+RUN chmod +x /hooks/*.sh
 
 WORKDIR /
 
