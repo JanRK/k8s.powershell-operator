@@ -28,7 +28,8 @@ jobs:
             docker-compose --file docker-compose.test.yml build
             docker-compose --file docker-compose.test.yml run sut
           else
-            docker build . --file Dockerfile
+            echo Testing ${GITHUB_REPOSITORY,,}
+            docker build . --file Dockerfile --cache-from ${GITHUB_REPOSITORY,,}:shell-operator --cache-from ${GITHUB_REPOSITORY,,}:libjq
           fi
 
 
@@ -43,7 +44,10 @@ jobs:
       - uses: actions/checkout@v1
 
       - name: Build image
-        run: docker build . --file Dockerfile --tag ${GITHUB_REPOSITORY,,}
+        run:  |
+          docker build . --file Dockerfile --tag ${GITHUB_REPOSITORY,,}:libjq --target libjq --cache-from ${GITHUB_REPOSITORY,,}:libjq
+          docker build . --file Dockerfile --tag ${GITHUB_REPOSITORY,,}:shell-operator --target shell-operator --cache-from ${GITHUB_REPOSITORY,,}:shell-operator
+          docker build . --file Dockerfile --tag ${GITHUB_REPOSITORY,,} --cache-from ${GITHUB_REPOSITORY,,}:shell-operator --cache-from ${GITHUB_REPOSITORY,,}:libjq
 
       - name: Log into registry
         run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
@@ -61,3 +65,5 @@ jobs:
           echo VERSION=$VERSION
           docker tag ${GITHUB_REPOSITORY,,} $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
+          docker push ${GITHUB_REPOSITORY,,}:libjq
+          docker push ${GITHUB_REPOSITORY,,}:shell-operator
