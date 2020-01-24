@@ -62,6 +62,8 @@ RUN wget --directory-prefix=/usr/share/keyrings https://packages.microsoft.com/k
 
 COPY --from=shell-operator /src/shell-operator /
 
+ADD hooks /hooks
+
 WORKDIR /
 
 ENTRYPOINT ["/shell-operator"]
