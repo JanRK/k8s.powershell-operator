@@ -65,7 +65,7 @@ RUN wget --directory-prefix=/usr/share/keyrings https://packages.microsoft.com/k
 COPY --from=shell-operator /src/shell-operator /
 
 ADD hooks /hooks
-RUN chmod +x /hooks/*.sh
+RUN chmod +x /hooks/*.sh;chmod +x /hooks/*.ps1
 
 WORKDIR /
 
