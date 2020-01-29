@@ -11,7 +11,8 @@ if ($args[0] -eq "--config") {
     }'
 } else {
     Write-Host "pwsh input"
-    $args[0] | convertfrom-json
-    Write-Host "json input"
-    $args[0]
+    $hookdata=(gc $env:BINDING_CONTEXT_PATH | convertfrom-json)
+    $podname=$hookdata.object.metadata.name
+    $eventname=$hookdata.watchEvent
+    write-host "$podname was $eventname!"
 }
